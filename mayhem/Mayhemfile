@@ -1,0 +1,4 @@
+project: glamour
+target: glamour-testdata-renderbytes-fuzz
+cmds:
+  - cmd: ./renderbytes-fuzz.libfuzzer
