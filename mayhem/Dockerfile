@@ -1,13 +1,15 @@
-FROM fuzzers/go-fuzz:1.2.0 as builder
+FROM golang:1.21 AS builder
+
+ENV GOTOOLCHAIN=auto
 
 ARG project='glamour'
-ARG fuzzTargetPath='testdata/fuzz'
-ARG fuzzTarget='renderbytes-fuzz'
+ARG fuzzTarget='FuzzRenderBytes'
+ARG fuzzTargetPkg='./testdata/fuzz'
 
-ADD . ${project}
-WORKDIR ${project}
-RUN GO_ENABLED=0 go-fuzz-build -libfuzzer -o /${fuzzTarget}.a ./${fuzzTargetPath}
-RUN clang -fsanitize=fuzzer /${fuzzTarget}.a -o /${fuzzTarget}.libfuzzer
+ADD . /${project}
+WORKDIR /${project}
 
-FROM ubuntu:20.04
-COPY --from=builder /renderbytes-fuzz.libfuzzer /
+RUN go test -c -fuzz=${fuzzTarget} ${fuzzTargetPkg} -o /${fuzzTarget}
+
+FROM ubuntu:22.04
+COPY --from=builder /FuzzRenderBytes /

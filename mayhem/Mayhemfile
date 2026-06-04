@@ -1,4 +1,4 @@
 project: glamour
-target: glamour-testdata-renderbytes-fuzz
+target: glamour-fuzz-renderbytes
 cmds:
-  - cmd: ./renderbytes-fuzz.libfuzzer
+  - cmd: /FuzzRenderBytes -test.fuzz=FuzzRenderBytes
